@@ -1,69 +1,36 @@
-// Copyright © 2025 Imre Toth <tothimre@gmail.com> - Proprietary Software. See LICENSE file for terms.
+// Copyright © 2025 Imre Toth <tothimre@gmail.com> - Proprietary Software.
 document.addEventListener('DOMContentLoaded', function() {
     const mainToggle = document.getElementById('main-toggle');
-    const shiftOption = document.getElementById('shift-option');
-    const ctrlOption = document.getElementById('ctrl-option');
-    const goPremiumLink = document.getElementById('go-premium');
+    const shiftOpt = document.getElementById('shift-opt');
+    const ctrlOpt = document.getElementById('ctrl-opt');
     let currentSite = '';
 
-    // Load initial settings
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        const url = new URL(tabs[0].url);
-        currentSite = url.hostname;
-
-        chrome.storage.sync.get(['siteSettings', 'useCtrl', 'premiumEnabled'], function(result) {
-            const siteSettings = result.siteSettings || {};
-            mainToggle.checked = siteSettings[currentSite] === true;
-            if (result.useCtrl) {
-                ctrlOption.checked = true;
-            } else {
-                shiftOption.checked = true;
-            }
-            // Check dev mode or premium status
-            chrome.management.getSelf((info) => {
-                if (info.installType === 'development') {
-                    goPremiumLink.textContent = 'Premium (Dev Mode)';
-                    goPremiumLink.href = '#';
-                } else if (result.premiumEnabled) {
-                    goPremiumLink.textContent = 'Premium Unlocked';
-                    goPremiumLink.href = '#';
-                }
-            });
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+        currentSite = new URL(tabs[0].url).hostname;
+        chrome.storage.sync.get(['siteSettings', 'useCtrl'], (res) => {
+            mainToggle.checked = !!(res.siteSettings && res.siteSettings[currentSite]);
+            if (res.useCtrl) ctrlOpt.checked = true; else shiftOpt.checked = true;
         });
     });
 
-    // Save settings when changed
-    function saveSettings() {
-        chrome.storage.sync.get(['siteSettings'], function(result) {
-            const siteSettings = result.siteSettings || {};
-            siteSettings[currentSite] = mainToggle.checked;
-
-            chrome.storage.sync.set({
-                siteSettings: siteSettings,
-                useCtrl: ctrlOption.checked
-            }, () => {
+    function update() {
+        chrome.storage.sync.get(['siteSettings'], (res) => {
+            const settings = res.siteSettings || {};
+            settings[currentSite] = mainToggle.checked;
+            chrome.storage.sync.set({ siteSettings: settings, useCtrl: ctrlOpt.checked }, () => {
                 chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-                    chrome.tabs.sendMessage(tabs[0].id, {
-                        action: 'setEnabledState',
-                        enabled: mainToggle.checked,
-                        useCtrl: ctrlOption.checked
-                    });
+                    chrome.tabs.sendMessage(tabs[0].id, { action: 'setEnabledState', enabled: mainToggle.checked, useCtrl: ctrlOpt.checked });
                 });
             });
         });
     }
 
-    mainToggle.addEventListener('change', saveSettings);
-    shiftOption.addEventListener('change', saveSettings);
-    ctrlOption.addEventListener('change', saveSettings);
+    mainToggle.onchange = update;
+    shiftOpt.onchange = update;
+    ctrlOpt.onchange = update;
 
-    // Placeholder for premium unlock
-    goPremiumLink.addEventListener('click', (e) => {
+    document.getElementById('open-options').onclick = (e) => {
         e.preventDefault();
-        chrome.management.getSelf((info) => {
-            if (info.installType !== 'development') {
-                alert('Premium feature: Double Enter to send! Coming soon—enabled in dev mode for testing.');
-            }
-        });
-    });
+        chrome.runtime.openOptionsPage();
+    };
 });

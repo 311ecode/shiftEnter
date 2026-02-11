@@ -1,9 +1,11 @@
-// Copyright © 2025 Imre Toth <tothimre@gmail.com> - Proprietary Software. See LICENSE file for terms.
-  function setupKeyListener() {
-      if (typeof window.handleKeyDown === 'function') {
-          document.addEventListener('keydown', window.handleKeyDown, true);
-      } else {
-          setTimeout(setupKeyListener, 10);
-      }
-  }
-  setupKeyListener();
+// Copyright © 2025 Imre Toth <tothimre@gmail.com> - Proprietary Software.
+(function() {
+    function setupItSwapper() {
+        if (typeof window.itSwapper_handleKeyDown === 'function') {
+            document.addEventListener('keydown', window.itSwapper_handleKeyDown, true);
+        } else {
+            setTimeout(setupItSwapper, 10);
+        }
+    }
+    setupItSwapper();
+})();

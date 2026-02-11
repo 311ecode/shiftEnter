@@ -2,95 +2,32 @@
 <html>
 <head>
     <style>
-        body {
-            width: 220px;
-            padding: 12px;
-            font-family: Arial, sans-serif;
-        }
-        .toggle-container {
-            margin-bottom: 15px;
-        }
-        .radio-group {
-            margin: 10px 0;
-        }
-        .radio-option {
-            margin: 5px 0;
-            display: flex;
-            align-items: center;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 20px;
-            margin-right: 10px;
-        }
-        .switch input {
-            opacity: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 20px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: #2196F3;
-        }
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-        .premium-teaser {
-            margin-top: 10px;
-            font-size: 12px;
-            text-align: center;
-        }
-        .premium-teaser a {
-            color: #2196F3;
-            text-decoration: none;
-        }
+        body { width: 220px; padding: 12px; font-family: sans-serif; font-size: 14px; }
+        .toggle-container { margin-bottom: 15px; display: flex; align-items: center; }
+        .radio-group { border-top: 1px solid #eee; padding-top: 10px; margin: 10px 0; }
+        .footer { border-top: 1px solid #eee; padding-top: 10px; display: flex; justify-content: space-between; font-size: 11px; }
+        .switch { position: relative; display: inline-block; width: 40px; height: 20px; margin-right: 10px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #2196F3; }
+        input:checked + .slider:before { transform: translateX(20px); }
+        a { color: #2196F3; text-decoration: none; }
     </style>
 </head>
 <body>
     <div class="toggle-container">
-        <label class="switch">
-            <input type="checkbox" id="main-toggle" checked>
-            <span class="slider"></span>
-        </label>
-        <span>Enable Key Swap</span>
+        <label class="switch"><input type="checkbox" id="main-toggle"><span class="slider"></span></label>
+        <span><strong>Enable Swap</strong></span>
     </div>
-
     <div class="radio-group">
-        <div class="radio-option">
-            <input type="radio" id="shift-option" name="modifier" value="shift" checked>
-            <label for="shift-option">Use Shift+Enter</label>
-        </div>
-        <div class="radio-option">
-            <input type="radio" id="ctrl-option" name="modifier" value="ctrl">
-            <label for="ctrl-option">Use Ctrl+Enter</label>
-        </div>
+        <div><input type="radio" id="shift-opt" name="mod" value="shift"><label for="shift-opt"> Shift+Enter submits</label></div>
+        <div><input type="radio" id="ctrl-opt" name="mod" value="ctrl"><label for="ctrl-opt"> Ctrl+Enter submits</label></div>
     </div>
-
-    <div class="premium-teaser">
-        Premium: Double Enter to send! <a href="#" id="go-premium">Unlock</a>
+    <div class="footer">
+        <a href="#" id="go-premium">Premium</a>
+        <a href="#" id="open-options">Manage Sites ⚙️</a>
     </div>
-
     <script src="popup.js"></script>
 </body>
 </html>

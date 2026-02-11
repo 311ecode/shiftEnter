@@ -1,13 +1,17 @@
 {
   "name": "Shift+Enter <-> Enter Swapper",
-  "version": "1.2",
-  "description": "Converts Shift+Enter presses into regular Enter, and regular Enter presses into Shift+Enter, within editable fields. Can be toggled per site.",
+  "version": "1.3",
+  "description": "Swaps Enter and Shift+Enter behavior. Now with Double-Enter to send and per-site toggles.",
   "manifest_version": 3,
   "permissions": [
     "storage",
     "activeTab",
     "management"
   ],
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
@@ -22,22 +26,9 @@
     }
   ],
   "action": {
-    "default_popup": "popup/popup.html",
-    "default_icon": {
-      "16": "icons/icon16.png",
-      "32": "icons/icon32.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
-    }
+    "default_popup": "popup/popup.html"
   },
   "icons": {
-    "16": "icons/icon16.png",
-    "32": "icons/icon32.png",
-    "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  },
-  "options_ui": {
-    "page": "options/options.html",
-    "open_in_tab": true
   }
 }
