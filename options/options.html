@@ -1,91 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Shift+Enter Swapper Settings</title>
+    <title>Manage Sites</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        h1 {
-            font-size: 20px;
-            margin-bottom: 15px;
-        }
-        .sites-section h2 {
-            font-size: 16px;
-            margin: 0 0 10px 0;
-        }
-        .sites-section ul {
-            list-style: none;
-            padding: 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .sites-section li {
-            padding: 8px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .sites-section li:nth-child(odd) {
-            background-color: #f5f5f5;
-        }
-        .sites-section li.empty {
-            color: #666;
-            font-style: italic;
-            justify-content: center;
-        }
-        .site-actions button {
-            margin-left: 5px;
-            padding: 2px 8px;
-            font-size: 12px;
-            cursor: pointer;
-            border: none;
-            border-radius: 3px;
-            color: white;
-        }
-        .site-actions .toggle-btn.active {
-            background-color: #ff9999; /* Pale red for Deactivate */
-        }
-        .site-actions .toggle-btn.inactive {
-            background-color: #99ff99; /* Pale green for Activate */
-        }
-        .site-actions .remove-btn {
-            background-color: #ff3333; /* Stronger red for Remove */
-        }
-        .add-site {
-            margin-top: 15px;
-        }
-        .add-site input {
-            padding: 5px;
-            width: 200px;
-            margin-right: 10px;
-        }
-        .add-site button {
-            padding: 5px 10px;
-            cursor: pointer;
-            background-color: #33cc33; /* Green for Add */
-            color: white;
-            border: none;
-            border-radius: 3px;
-        }
+        body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+        ul { list-style: none; padding: 0; border: 1px solid #eee; }
+        li { padding: 10px; display: flex; justify-content: space-between; border-bottom: 1px solid #eee; }
+        .remove { color: red; cursor: pointer; border: none; background: none; }
     </style>
 </head>
 <body>
-    <h1>Shift+Enter Swapper Settings</h1>
-    <div class="sites-section">
-        <h2>Manage Sites</h2>
-        <ul id="sites-list"></ul>
-    </div>
-    <div class="add-site">
-        <input type="text" id="new-site-input" placeholder="Enter site (e.g., example.com)">
-        <button id="add-site-btn">Add Site</button>
-    </div>
+    <h1>Enabled Sites</h1>
+    <ul id="list"></ul>
     <script src="options.js"></script>
 </body>
 </html>

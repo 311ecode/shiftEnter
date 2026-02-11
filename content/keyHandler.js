@@ -1,81 +1,36 @@
-// Copyright © 2025 Imre Toth <tothimre@gmail.com> - Proprietary Software. See LICENSE file for terms.
-// Handle keydown event with double Enter premium/dev feature
-function handleKeyDown(event) {
-  if (!window.isEnabled || event.key !== "Enter" || window.isSimulating) return;
+// Copyright © 2025 Imre Toth <tothimre@gmail.com> - Proprietary Software.
+function itSwapper_handleKeyDown(event) {
+    if (!window.itSwapper_isEnabled || event.key !== "Enter" || window.itSwapper_isSimulating) return;
 
-  const target = event.target;
-  const modifierPressed = window.useCtrl ? event.ctrlKey : event.shiftKey;
-  const currentTime = Date.now();
+    const target = event.target;
+    const modifierPressed = window.itSwapper_useCtrl ? event.ctrlKey : event.shiftKey;
+    const currentTime = Date.now();
 
-  // Track last Enter press for double press detection
-  if (!window.lastEnterTime) window.lastEnterTime = 0;
-  const timeSinceLastEnter = currentTime - window.lastEnterTime;
-  window.lastEnterTime = currentTime;
+    if (!window.itSwapper_lastEnterTime) window.itSwapper_lastEnterTime = 0;
+    const timeSinceLastEnter = currentTime - window.itSwapper_lastEnterTime;
+    window.itSwapper_lastEnterTime = currentTime;
 
-  const isDoublePress = timeSinceLastEnter < 40; // 300ms threshold
+    const isDoublePress = timeSinceLastEnter > 50 && timeSinceLastEnter < 250;
 
-  // Double Enter → Submit (if premium OR in dev mode)
-  if (isDoublePress && (window.premiumEnabled || window.isDevMode)) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    window.isSimulating = true;
+    // Submit Action (Double Enter OR Modified Enter)
+    if ((isDoublePress && window.itSwapper_premiumEnabled) || (modifierPressed && !event.altKey && !event.metaKey)) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        window.itSwapper_isSimulating = true;
+        target.dispatchEvent(new KeyboardEvent("keydown", {
+            key: "Enter", code: "Enter", keyCode: 13, which: 13, bubbles: true, composed: true, cancelable: true
+        }));
+        window.itSwapper_isSimulating = false;
+        return;
+    }
 
-    // Simulate a plain Enter keydown for submission
-    const submitEvent = new KeyboardEvent("keydown", {
-      key: "Enter",
-      code: "Enter",
-      keyCode: 13,
-      bubbles: true,
-      composed: true,
-      cancelable: true,
-    });
-    target.dispatchEvent(submitEvent);
-    window.isSimulating = false;
-    return; // Exit after handling double press
-  }
-
-  // Modified+Enter → Submit (original Enter)
-  if (modifierPressed && !event.altKey && !event.metaKey) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    window.isSimulating = true;
-
-    const submitEvent = new KeyboardEvent("keydown", {
-      key: "Enter",
-      code: "Enter",
-      keyCode: 13,
-      bubbles: true,
-      composed: true,
-      cancelable: true,
-    });
-    target.dispatchEvent(submitEvent); // Dispatch it to the target element
-
-    // keep this comments here to avoid confusion and support future development.
-    // Reset the flag immediately after dispatch
-    // Originally used setTimeout to delay this, but it's not needed:
-    // - `dispatchEvent` is synchronous, and the event propagates instantly.
-    // - `isSimulating` is true during dispatch, so our listener (above) skips the synthetic event.
-    // - By the time this line runs, the synthetic event has finished, so no risk of re-entry.
-    // The old setTimeout(..., 10) was a cautious buffer, but testing shows it’s unnecessary.
-    // setTimeout(() => {
-    window.isSimulating = false;
-    // }, 10);
-  }
-  // Regular Enter → Newline (single press or non-premium/non-dev)
-  else if (!event.ctrlKey && !event.altKey && !event.metaKey) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    window.isSimulating = true;
-
-    window.insertNewline(target); // Call the newline insertion function from newline.js
-    // Note: insertNewline might dispatch a Shift+Enter event, but our listener only cares
-    // about plain Enter (event.key === 'Enter'), so no loop risk here.
-
-    // Reset immediately after insertion
-    // Same logic as above: the synthetic Shift+Enter (if dispatched) won’t trigger this
-    // function again, and the operation is complete, so no delay is needed.
-    window.isSimulating = false;
-  }
+    // Newline Action (Regular Enter)
+    if (!event.ctrlKey && !event.altKey && !event.metaKey) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        window.itSwapper_isSimulating = true;
+        window.itSwapper_insertNewline(target);
+        window.itSwapper_isSimulating = false;
+    }
 }
-
-window.handleKeyDown = handleKeyDown;
+window.itSwapper_handleKeyDown = itSwapper_handleKeyDown;
